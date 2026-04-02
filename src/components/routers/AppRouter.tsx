@@ -3,7 +3,6 @@ import React, { lazy, Suspense } from "react";
 import { localStorageService } from "../../common/storages";
 import LoadingPage from "../pages/LoadingPage";
 
-const AdminPage = lazy(() => import('../pages/AdminPage'));
 const LoginPage = lazy(() => import('../pages/login-page/LoginPage'));
 
 
