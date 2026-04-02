@@ -44,6 +44,7 @@ const AppRouter: React.FC = () => {
                 </Routes>
             </Suspense>
         </UserProvider>
+
     )
 }
 
