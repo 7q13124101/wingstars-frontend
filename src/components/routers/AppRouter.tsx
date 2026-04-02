@@ -29,6 +29,7 @@ const AppRouter: React.FC = () => {
                     </ProtectedRoute>
                 } /> */}
                 {/* Add more routes here */}
+                <Route path="/" element={<LoginPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 {/* 404 fallback */}
                 {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
