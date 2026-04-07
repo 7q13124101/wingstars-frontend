@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Table, Button, Modal, Form, Input, InputNumber, Switch, DatePicker, Upload, message, Alert, Tag, Space, Image } from 'antd';
 import { Search, Plus, CloudDownload, SlidersHorizontal, ChevronDown, MoreHorizontal } from 'lucide-react';
 import { UploadOutlined, PictureOutlined, LinkOutlined } from '@ant-design/icons';
@@ -86,7 +86,7 @@ export default function BannersPage() {
               return;
             }
             setBanners(prev => prev.map(item => item.id === record.id ? { ...item, active: checked } : item));
-            message.success(checked ? 'Đã lên kệ!' : 'Đã xuống kệ!');
+            message.success(checked ? '已上架!' : '已下架!');
           }}
           checkedChildren="On" 
           unCheckedChildren="Off" 
@@ -105,8 +105,8 @@ export default function BannersPage() {
       width: 200,
       render: (_, record) => (
         <div className="text-[11px] font-medium bg-gray-50 p-1.5 rounded border border-gray-100 inline-block">
-          <div className="text-emerald-600 mb-0.5">S: {record.timeRange[0]}</div>
-          <div className="text-rose-500">E: {record.timeRange[1]}</div>
+          <div className="text-emerald-600 mb-0.5">開始: {record.timeRange[0]}</div>
+          <div className="text-rose-500">結束: {record.timeRange[1]}</div>
         </div>
       ) 
     },
@@ -137,18 +137,18 @@ export default function BannersPage() {
               });
               setIsModalOpen(true);
             }}
-            className="bg-[#FF9FB8] hover:bg-[#FF6B93] text-white text-[12px] px-3 py-1.5 rounded-full transition-colors whitespace-nowrap"
+            className="bg-button-edit hover:bg-wingstars-primary text-white text-[12px] px-3 py-1.5 rounded-full transition-colors whitespace-nowrap"
           >
             編輯
           </button>
           <button 
             onClick={() => {
-              if (window.confirm("Bạn có chắc chắn muốn xóa Banner này?")) {
+              if (window.confirm("您確定要刪除嗎？")) {
                 setBanners(prev => prev.filter(item => item.id !== record.id));
-                message.success('Đã xóa Banner!');
+                message.success('已刪除 Banner！');
               }
             }}
-            className="bg-white border border-[#FF9FB8] text-[#FF9FB8] hover:bg-pink-50 text-[12px] px-3 py-1.5 rounded-full transition-colors whitespace-nowrap"
+            className="bg-white border border-button-edit text-button-edit hover:bg-pink-50 text-[12px] px-3 py-1.5 rounded-full transition-colors whitespace-nowrap"
           >
             刪除
           </button>
@@ -224,7 +224,7 @@ export default function BannersPage() {
       
       {/* Khối Cảnh báo */}
       <Alert 
-        message={<span className="font-bold text-[#FF6B93]">App 顯示規則</span>} 
+        message={<span className="font-bold text-wingstars-primary">App 顯示規則</span>} 
         description={<span className="text-gray-600 ">僅顯示最多 5 個處於啟用（On）且在有效時間範圍內的 Banner。權重越高，顯示順序越靠前。</span>} 
         type="warning" 
         showIcon 
@@ -234,7 +234,7 @@ export default function BannersPage() {
       <div className="flex justify-between items-center pt-6">
         <Input 
           prefix={<Search size={18} className="text-gray-400" />}
-          placeholder="Tìm kiếm Banner..." 
+          placeholder="尋找橫幅..." 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-[300px] py-2.5 rounded-xl border-gray-100 hover:border-pink-300 focus:border-pink-400 shadow-sm"
@@ -252,7 +252,7 @@ export default function BannersPage() {
             }}
             className="bg-white text-blue-500 border-gray-100 shadow-sm h-11 rounded-xl px-4 flex items-center gap-2 hover:!bg-gray-50 hover:!text-blue-600"
           >
-            <span className="font-medium text-gray-700">Add Banner</span>
+            <span className="font-medium text-gray-700">新增橫幅</span>
           </Button>
           
           <Button className="border-gray-100 shadow-sm h-11 rounded-xl px-4 flex items-center gap-2">

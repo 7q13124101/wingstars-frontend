@@ -44,7 +44,7 @@ export default function Sidebar() {
                 className={({ isActive }) =>
                 `flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-200 ${
                     isActive
-                    ? 'bg-pink-50 text-[#FF6B93]' 
+                    ? 'bg-pink-50 text-wingstars-primary' 
                     : 'text-gray-500 hover:bg-gray-50' 
                 }`
                 }

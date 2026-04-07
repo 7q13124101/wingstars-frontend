@@ -14,9 +14,9 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 // Dữ liệu ban đầu (Move từ UsersPage sang đây)
 const initialData: UserType[] = [
-  { id: 1, username: 'Jinxiaoshi', phone: '0970000002', displayName: '金小士', email: 'jinxiaoshi01@gmail.com', articles: 0, points: 100, role: '管理員' },
-  { id: 2, username: 'Ruandaren', phone: '0970000003', displayName: '阮大仁', email: 'ruandaren01@gmail.com', articles: 1, points: 0, role: '網站管理員, 客戶, 管理員' },
-  { id: 3, username: 'Xiaoling', phone: '0970000001', displayName: '小玲', email: 'xiaoling01@gmail.com', articles: 0, points: 20, role: '客戶' },
+  { id: 1, username: 'Jinxiaoshi', phone: '0970000002', displayName: '金小士', email: 'jinxiaoshi01@gmail.com', articles: 0, points: 100, role: ['管理員'] },
+  { id: 2, username: 'Ruandaren', phone: '0970000003', displayName: '阮大仁', email: 'ruandaren01@gmail.com', articles: 1, points: 0, role: ['網站管理員', '客戶', '管理員'] },
+  { id: 3, username: 'Xiaoling', phone: '0970000001', displayName: '小玲', email: 'xiaoling01@gmail.com', articles: 0, points: 20, role: ['客戶'] },
 ];
 
 export function UserProvider({ children }: { children: ReactNode }) {

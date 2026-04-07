@@ -6,7 +6,7 @@ export interface UserFormData {
   phone: string;
   displayName: string;
   email: string;
-  role: string;
+  role: string[];
 }
 
 interface AddUserModalProps {
@@ -94,7 +94,7 @@ export default function AddUserModal({ onClose, onSave, initialData }: AddUserMo
             label="Role"
             rules={[{ required: true }]}
           >
-            <Select className="h-10">
+            <Select mode="multiple" placeholder="請選擇角色">
               <Select.Option value="客戶">客戶</Select.Option>
               <Select.Option value="管理員">管理員</Select.Option>
               <Select.Option value="網站管理員">網站管理員</Select.Option>

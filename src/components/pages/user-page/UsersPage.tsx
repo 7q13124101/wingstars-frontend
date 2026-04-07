@@ -24,7 +24,13 @@ export default function UsersPage() {
     { title: '電子郵件地址', dataIndex: 'email', key: 'email', render: (text) => <span className="text-gray-500">{text}</span> },
     { title: '文章', dataIndex: 'articles', key: 'articles', align: 'center', render: (text) => <span className="font-medium">{text}</span> },
     { title: 'Points', dataIndex: 'points', key: 'points', align: 'center', render: (text) => <span className="font-medium text-pink-500">{text}</span> },
-    { title: 'Role', dataIndex: 'role', key: 'role' },
+    { title: 'Role',
+      dataIndex: 'role',
+      key: 'role', render: (roles: string[]) => 
+        {
+          return <span>{Array.isArray(roles) ? roles.join(', ') : roles}  </span>
+        }
+      },
     {
       title: '操作',
       key: 'action',
@@ -38,7 +44,7 @@ export default function UsersPage() {
           </button>
           <button 
             onClick={() => {
-              if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
+              if (window.confirm("您確定要刪除嗎？")) {
                 setUsersList(prev => prev.filter(u => u.id !== record.id));
               }
             }}
@@ -54,7 +60,7 @@ export default function UsersPage() {
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: UserType[]) => {
-      console.log(`Đã chọn IDs: ${selectedRowKeys}`, 'Dữ liệu:', selectedRows);
+      console.log(`已選擇 IDs: ${selectedRowKeys}`, '資料:', selectedRows);
     },
   };
 
@@ -77,7 +83,7 @@ export default function UsersPage() {
             onClick={() => { setEditingUser(null); setIsModalOpen(true); }}
             className="bg-white text-blue-500 border-gray-100 shadow-sm h-11 rounded-xl px-4 flex items-center gap-2 hover:!bg-gray-50 hover:!text-blue-600"
           >
-            <span className="font-medium text-gray-700">Add new</span>
+            <span className="font-medium text-gray-700">新增</span>
           </Button>
           
           <Button className="border-gray-100 shadow-sm h-11 rounded-xl px-4 flex items-center gap-2">
