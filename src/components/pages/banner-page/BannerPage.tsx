@@ -31,6 +31,8 @@ export default function BannersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [form] = Form.useForm<BannerFormValues>();
 
   const [banners, setBanners] = useState<BannerRecord[]>([
@@ -166,63 +168,92 @@ export default function BannersPage() {
         return Upload.LIST_IGNORE;
       }
       setFileList([file]); 
-      return false; 
+      return false;
     },
     fileList, 
     maxCount: 1,
   };
 
-  const handleFinish = (values: BannerFormValues) => {
+  const handleFinish = async (values: BannerFormValues) => {
     if (!editingId && values.active && activeCount >= 5) {
       message.error('最多只能上架 5 張 Banner！');
       return;
     }
 
-    let previewUrl = '';
-    if (fileList.length > 0) {
-      const originFile = fileList[0] as unknown as File;
-      previewUrl = URL.createObjectURL(originFile);
-    }
+    setIsSubmitting(true);
+    let finalImageUrl = '';
 
-    if (editingId) {
-      setBanners(prev => prev.map(item => item.id === editingId ? {
-        ...item,
-        imgUrl: previewUrl || item.imgUrl, 
-        active: values.active,
-        weight: values.weight || 0,
-        url: values.url || '',
-        timeRange: [
-          values.schedule[0].format('YYYY-MM-DD HH:mm'),
-          values.schedule[1].format('YYYY-MM-DD HH:mm')
-        ]
-      } : item));
-      message.success('Banner 更新成功！');
-    } else {
-      const newBanner: BannerRecord = {
-        id: Date.now(), 
-        imgUrl: previewUrl, 
-        active: values.active,
-        weight: values.weight || 0,
-        url: values.url || '',
-        timeRange: [
-          values.schedule[0].format('YYYY-MM-DD HH:mm'),
-          values.schedule[1].format('YYYY-MM-DD HH:mm')
-        ]
-      };
-      setBanners(prev => [newBanner, ...prev]);
-      message.success('已儲存新的 Banner！');
-    }
+    try {
+      // 如果使用者有選擇新圖片，則呼叫 File Service API
+      if (fileList.length > 0) {
+        const originFile = fileList[0] as unknown as File;
+        const formData = new FormData();
+        formData.append('file', originFile);
 
-    setIsModalOpen(false);
-    form.resetFields(); 
-    setFileList([]); 
-    setEditingId(null);
+        const uploadUrl = 'https://chaim-leasable-outfly.ngrok-free.dev/swagger-ui/index.html#/api/files/upload?module_source=BANNER_HOME';
+        const uploadRes = await fetch(uploadUrl, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('wingstars_token')}`
+          },
+          body: formData
+        });
+
+        if (!uploadRes.ok) throw new Error('Upload failed');
+        
+        const uploadData = await uploadRes.json();
+        finalImageUrl = uploadData.data?.file_url || uploadData.file_url; 
+      }
+
+      // 儲存橫幅（使用剛剛取得的實際圖像的 URL）
+      if (editingId) {
+        const oldBanner = banners.find(b => b.id === editingId);
+        const urlToSave = finalImageUrl || oldBanner?.imgUrl || '';
+
+        setBanners(prev => prev.map(item => item.id === editingId ? {
+          ...item,
+          imgUrl: urlToSave, 
+          active: values.active,
+          weight: values.weight || 0,
+          url: values.url || '',
+          timeRange: [
+            values.schedule[0].format('YYYY-MM-DD HH:mm'),
+            values.schedule[1].format('YYYY-MM-DD HH:mm')
+          ]
+        } : item));
+        message.success('Banner 更新成功！');
+      } else {
+        const newBanner: BannerRecord = {
+          id: Date.now(), 
+          imgUrl: finalImageUrl, 
+          active: values.active,
+          weight: values.weight || 0,
+          url: values.url || '',
+          timeRange: [
+            values.schedule[0].format('YYYY-MM-DD HH:mm'),
+            values.schedule[1].format('YYYY-MM-DD HH:mm')
+          ]
+        };
+        setBanners(prev => [newBanner, ...prev]);
+        message.success('已儲存新的 Banner！');
+      }
+
+      setIsModalOpen(false);
+      form.resetFields(); 
+      setFileList([]); 
+      setEditingId(null);
+
+    } catch (error) {
+      console.error('Error Upload:', error);
+      message.error('上傳圖片失敗，請再試一次！');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="h-[calc(100vh-80px)] overflow-y-auto px-4 space-y-4 custom-scrollbar pb-10">
       
-      {/* Khối Cảnh báo */}
       <Alert 
         message={<span className="font-bold text-wingstars-primary">App 顯示規則</span>} 
         description={<span className="text-gray-600 ">僅顯示最多 5 個處於啟用（On）且在有效時間範圍內的 Banner。權重越高，顯示順序越靠前。</span>} 
@@ -291,6 +322,7 @@ export default function BannersPage() {
         title={editingId ? "更新 Banner (編輯)" : "新增 Banner (新增)"} 
         open={isModalOpen} 
         onCancel={() => {
+          if (isSubmitting) return;
           setIsModalOpen(false);
           setEditingId(null);
           form.resetFields();
@@ -299,33 +331,36 @@ export default function BannersPage() {
         onOk={() => form.submit()}
         okText={editingId ? "更新" : "儲存"}
         cancelText="取消"
+        // 在呼叫 API 期間鎖定按鈕
+        confirmLoading={isSubmitting}
+        cancelButtonProps={{ disabled: isSubmitting }}
         width={600}
         destroyOnClose
       >
         <Form form={form} layout="vertical" onFinish={handleFinish} className="mt-4">
           <Form.Item label="1. 圖片（上傳圖片－需為16:9）" name="image" rules={[{ required: !editingId, message: '請選擇圖片！' }]}>
             <Upload {...uploadProps} listType="picture">
-              <Button icon={<UploadOutlined />}>上傳圖片（建議尺寸：1920x1080）</Button>
+              <Button icon={<UploadOutlined />} disabled={isSubmitting}>上傳圖片（建議尺寸：1920x1080）</Button>
             </Upload>
             {editingId && <div className="text-xs text-gray-400 mt-1">若不想更換圖片，請留空</div>}
           </Form.Item>
 
           <div className="grid grid-cols-2 gap-4">
             <Form.Item label="2. 狀態 (上下架)" name="active" valuePropName="checked" initialValue={true}>
-              <Switch checkedChildren="上架中" unCheckedChildren="已下架" />
+              <Switch checkedChildren="上架中" unCheckedChildren="已下架" disabled={isSubmitting} />
             </Form.Item>
 
             <Form.Item label="3. 重量 (排序)" name="weight" initialValue={0}>
-              <InputNumber className="w-full" min={0} />
+              <InputNumber className="w-full" min={0} disabled={isSubmitting} />
             </Form.Item>
           </div>
 
           <Form.Item label="4. 預約顯示時間 (定時上下架)" name="schedule" rules={[{ required: true, message: '請選擇時間區間！' }]}>
-            <RangePicker showTime format="YYYY-MM-DD HH:mm" className="w-full" placeholder={['開始時間', '結束時間']} />
+            <RangePicker showTime format="YYYY-MM-DD HH:mm" className="w-full" placeholder={['開始時間', '結束時間']} disabled={isSubmitting} />
           </Form.Item>
 
           <Form.Item label="5. 跳轉連結 (跳轉外部網頁 - WebView)" name="url">
-            <Input placeholder="輸入 URL（例如: https://wingstars.com.tw/event)" />
+            <Input placeholder="輸入 URL（例如: https://wingstars.com.tw/event)" disabled={isSubmitting} />
           </Form.Item>
         </Form>
       </Modal>

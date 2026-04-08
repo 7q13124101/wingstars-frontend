@@ -8,6 +8,7 @@ import AdminLayout from "../../layouts/AdminLayout";
 const LoginPage = lazy(() => import('../pages/login-page/LoginPage'));
 const UsersPage = lazy(() => import('../pages/user-page/UsersPage'));
 const BannerPage = lazy(() => import('../pages/banner-page/BannerPage'));
+const AdminPage = lazy(() => import('../pages/admin-page/AdminPage'));
 
 interface ProtectedRouteProps {
     children: JSX.Element;
@@ -22,7 +23,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, isAuthenticat
 }
 
 const AppRouter: React.FC = () => {
-    const isAuthenticated = true; 
+    const isAuthenticated = Boolean(localStorageService.getAccessToken());
+    // const isAuthenticated = true; 
 
     return (
         <UserProvider>
@@ -38,6 +40,7 @@ const AppRouter: React.FC = () => {
                         <Route index element={<UsersPage />} />
                         <Route path="users" element={<UsersPage />} />
                         <Route path="banners" element={<BannerPage />} />
+                        <Route path="admins" element={<AdminPage />} />
                     </Route>
 
                     <Route path="*" element={<Navigate to="/" replace />} />

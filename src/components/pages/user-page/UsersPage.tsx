@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Table, Button, Input, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { Search, Plus, CloudDownload, SlidersHorizontal, ChevronDown, MoreHorizontal } from 'lucide-react';
+import { Search, Plus, CloudDownload, SlidersHorizontal, ChevronDown, Tag} from 'lucide-react';
 import { useUsers, type UserType } from '../../../context/UserContext';
 import AddUserModal from './AddUserModal';
 
@@ -24,13 +24,11 @@ export default function UsersPage() {
     { title: '電子郵件地址', dataIndex: 'email', key: 'email', render: (text) => <span className="text-gray-500">{text}</span> },
     { title: '文章', dataIndex: 'articles', key: 'articles', align: 'center', render: (text) => <span className="font-medium">{text}</span> },
     { title: 'Points', dataIndex: 'points', key: 'points', align: 'center', render: (text) => <span className="font-medium text-pink-500">{text}</span> },
-    { title: 'Role',
-      dataIndex: 'role',
-      key: 'role', render: (roles: string[]) => 
-        {
-          return <span>{Array.isArray(roles) ? roles.join(', ') : roles}  </span>
-        }
-      },
+    { 
+      title: '會員等級', 
+      dataIndex: 'tier', 
+      render: (tier) => <Tag color="orange">{tier || '一般會員'}</Tag>
+    },
     {
       title: '操作',
       key: 'action',
@@ -38,7 +36,7 @@ export default function UsersPage() {
         <Space size="middle">
           <button 
             onClick={() => { setEditingUser(record); setIsModalOpen(true); }}
-            className="bg-[#FF9FB8] hover:bg-button-edit text-white text-[12px] px-3 py-1.5 rounded-full transition-colors"
+            className="bg-button-edit hover:bg-button-edit text-white text-[12px] px-3 py-1.5 rounded-full transition-colors"
           >
             編輯
           </button>
@@ -52,17 +50,10 @@ export default function UsersPage() {
           >
             刪除
           </button>
-          <Button type="text" icon={<MoreHorizontal size={18} className="text-gray-400" />} />
         </Space>
       ),
     },
   ];
-
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: UserType[]) => {
-      console.log(`已選擇 IDs: ${selectedRowKeys}`, '資料:', selectedRows);
-    },
-  };
 
   return (
     <div className="flex flex-col h-full gap-6">
@@ -104,7 +95,6 @@ export default function UsersPage() {
 
       <div className="bg-white rounded-[20px] shadow-sm border border-gray-50 overflow-hidden">
         <Table 
-          rowSelection={{ type: 'checkbox', ...rowSelection }}
           columns={columns} 
           dataSource={filteredData} 
           rowKey="id" 

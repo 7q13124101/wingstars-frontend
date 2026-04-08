@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import { Modal, Form, Input, Select } from 'antd';
+import { Modal, Form, Input } from 'antd';
 
 export interface UserFormData {
   username: string;
   phone: string;
   displayName: string;
   email: string;
-  role: string[];
 }
 
 interface AddUserModalProps {
@@ -16,10 +15,8 @@ interface AddUserModalProps {
 }
 
 export default function AddUserModal({ onClose, onSave, initialData }: AddUserModalProps) {
-  // 初始化表單的 instance，以便可以操作（重置、設定資料）
   const [form] = Form.useForm();
 
-  // 每次打開 Modal 時，如果有舊資料就填入表單，否則清空表單
   useEffect(() => {
     if (initialData) {
       form.setFieldsValue(initialData);
@@ -29,8 +26,6 @@ export default function AddUserModal({ onClose, onSave, initialData }: AddUserMo
   }, [initialData, form]);
 
   const handleOk = () => {
-      // validateFields() 會檢查以下所有規則
-      // 如果通過，會回傳資料；如果有錯誤，會自動顯示紅色提示並停止操作
     form.validateFields()
       .then((values) => {
         onSave(values);
@@ -58,7 +53,6 @@ export default function AddUserModal({ onClose, onSave, initialData }: AddUserMo
         form={form}
         layout="vertical"
         name="user_form"
-        initialValues={{ role: '客戶' }}
         className="mt-6"
       >
         <Form.Item
@@ -77,30 +71,16 @@ export default function AddUserModal({ onClose, onSave, initialData }: AddUserMo
           <Input placeholder="請輸入顯示名稱..." className="rounded-lg py-2" />
         </Form.Item>
 
-        <div className="grid grid-cols-2 gap-4">
-          <Form.Item
-            name="phone"
-            label="手機"
-            rules={[
-              { required: true, message: '請輸入手機號碼！' },
-              { pattern: /^[0-9]{10}$/, message: '手機號碼必須是10個數字！' }
-            ]}
-          >
-            <Input placeholder="09xxxxxxxx" className="rounded-lg py-2" />
-          </Form.Item>
-
-          <Form.Item
-            name="role"
-            label="Role"
-            rules={[{ required: true }]}
-          >
-            <Select mode="multiple" placeholder="請選擇角色">
-              <Select.Option value="客戶">客戶</Select.Option>
-              <Select.Option value="管理員">管理員</Select.Option>
-              <Select.Option value="網站管理員">網站管理員</Select.Option>
-            </Select>
-          </Form.Item>
-        </div>
+        <Form.Item
+          name="phone"
+          label="手機"
+          rules={[
+            { required: true, message: '請輸入手機號碼！' },
+            { pattern: /^[0-9]{10}$/, message: '手機號碼必須是10個數字！' }
+          ]}
+        >
+          <Input placeholder="09xxxxxxxx" className="rounded-lg py-2" />
+        </Form.Item>
 
         <Form.Item
           name="email"

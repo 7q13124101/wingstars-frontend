@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, Bell, Mail, Inbox, ChevronDown, LogOut, User } from 'lucide-react';
+import { Menu, ChevronDown, LogOut, User } from 'lucide-react';
 
-export default function Header() {
+interface HeaderProps {
+  onSidebarToggle: () => void;
+}
+
+export default function Header({ onSidebarToggle }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation(); 
   
@@ -20,14 +24,14 @@ export default function Header() {
     if (path.includes('/banners')) return '輪播 Banner';
     if (path.includes('/members')) return '成員介紹';
     if (path.includes('/events')) return '活動花絮';
-    
+    if (path.includes('/admins')) return '管理員';
     return '使用者'; 
   };
 
   return (
-    <header className="h-[80px] flex items-center justify-between px-8 bg-[#FDFBFC]">
+    <header className="h-[80px] flex items-center justify-between px-8 bg-sidebar-primary">
       <div className="flex items-center gap-4">
-        <button className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
+        <button onClick={onSidebarToggle} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
           <Menu size={24} />
         </button>
         <h1 className="text-[22px] font-bold text-gray-800 tracking-wide">
@@ -36,24 +40,6 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-8">
-        
-        <div className="flex items-center gap-5">
-          <button className="relative p-1 text-gray-400 hover:text-gray-600 transition-colors">
-            <Bell size={22} />
-            <span className="absolute -top-1 -right-1.5 bg-[#1890FF] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#FDFBFC]">23</span>
-          </button>
-          <button className="relative p-1 text-gray-400 hover:text-gray-600 transition-colors">
-            <Mail size={22} />
-            <span className="absolute -top-1 -right-1.5 bg-[#52C41A] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#FDFBFC]">68</span>
-          </button>
-          <button className="relative p-1 text-gray-400 hover:text-gray-600 transition-colors">
-            <Inbox size={22} />
-            <span className="absolute -top-1 -right-1 bg-gray-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#FDFBFC]">14</span>
-          </button>
-        </div>
-
-        <div className="w-[1px] h-8 bg-gray-200"></div>
-
         <div className="relative">
           
           <div 
