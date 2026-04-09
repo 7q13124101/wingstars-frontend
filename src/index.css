@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme {
+  --color-wingstars-primary: #FF6B93;
+  --color-wingstars-hover: #ff85a7;
+  --color-wingstars-light: #fdf2f5;
+  --color-sidebar-primary: #FDFBFC;
+  --color-button-edit: #FF9FB8;
+}

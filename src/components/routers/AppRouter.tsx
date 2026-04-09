@@ -2,9 +2,13 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import React, { lazy, Suspense } from "react";
 import { localStorageService } from "../../common/storages";
 import LoadingPage from "../pages/LoadingPage";
+import { UserProvider } from '../../context/UserContext';
+import AdminLayout from "../../layouts/AdminLayout"; 
 
 const LoginPage = lazy(() => import('../pages/login-page/LoginPage'));
-
+const UsersPage = lazy(() => import('../pages/user-page/UsersPage'));
+const BannerPage = lazy(() => import('../pages/banner-page/BannerPage'));
+const AdminPage = lazy(() => import('../pages/admin-page/AdminPage'));
 
 interface ProtectedRouteProps {
     children: JSX.Element;
@@ -20,21 +24,30 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, isAuthenticat
 
 const AppRouter: React.FC = () => {
     const isAuthenticated = Boolean(localStorageService.getAccessToken());
+    // const isAuthenticated = true; 
+
     return (
-        <Suspense fallback={<LoadingPage />}>
-            <Routes>
-                {/* <Route path="/admin" element={
-                    <ProtectedRoute isAuthenticated={isAuthenticated}>
-                        <AdminPage />
-                    </ProtectedRoute>
-                } /> */}
-                {/* Add more routes here */}
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                {/* 404 fallback */}
-                {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
-            </Routes>
-        </Suspense>
+        <UserProvider>
+            <Suspense fallback={<LoadingPage />}>
+                <Routes>
+                    <Route path="/login" element={<LoginPage />} />
+
+                    <Route path="/" element={
+                        <ProtectedRoute isAuthenticated={isAuthenticated}>
+                            <AdminLayout />
+                        </ProtectedRoute>
+                    }>
+                        <Route index element={<UsersPage />} />
+                        <Route path="users" element={<UsersPage />} />
+                        <Route path="banners" element={<BannerPage />} />
+                        <Route path="admins" element={<AdminPage />} />
+                    </Route>
+
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+            </Suspense>
+        </UserProvider>
+
     )
 }
 
