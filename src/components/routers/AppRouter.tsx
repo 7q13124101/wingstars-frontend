@@ -1,9 +1,11 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import React, { lazy, Suspense } from "react";
-import { localStorageService } from "../../common/storages";
-import LoadingPage from "../pages/LoadingPage";
+import { Navigate, Route, Routes } from 'react-router-dom';
+import React, { lazy, Suspense } from 'react';
+import { localStorageService } from '../../common/storages';
+import LoadingPage from '../pages/LoadingPage';
 import { UserProvider } from '../../context/UserContext';
-import AdminLayout from "../../layouts/AdminLayout"; 
+import AdminLayout from '../../layouts/AdminLayout';
+import NewsPage from '../pages/news-page/NewsPage';
+import MemberPage from '../pages/member-page/MemberPage';
 
 const LoginPage = lazy(() => import('../pages/login-page/LoginPage'));
 const UsersPage = lazy(() => import('../pages/user-page/UsersPage'));
@@ -17,14 +19,14 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, isAuthenticated }) => {
     if (!isAuthenticated) {
-        return <Navigate to="/login" replace />
+        return <Navigate to="/login" replace />;
     }
     return children;
-}
+};
 
 const AppRouter: React.FC = () => {
     const isAuthenticated = Boolean(localStorageService.getAccessToken());
-    // const isAuthenticated = true; 
+    // const isAuthenticated = true;
 
     return (
         <UserProvider>
@@ -32,23 +34,27 @@ const AppRouter: React.FC = () => {
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
 
-                    <Route path="/" element={
-                        <ProtectedRoute isAuthenticated={isAuthenticated}>
-                            <AdminLayout />
-                        </ProtectedRoute>
-                    }>
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute isAuthenticated={isAuthenticated}>
+                                <AdminLayout />
+                            </ProtectedRoute>
+                        }
+                    >
                         <Route index element={<UsersPage />} />
                         <Route path="users" element={<UsersPage />} />
                         <Route path="banners" element={<BannerPage />} />
                         <Route path="admins" element={<AdminPage />} />
+                        <Route path="news" element={<NewsPage />} />
+                        <Route path="members" element={<MemberPage />} />
                     </Route>
 
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </Suspense>
         </UserProvider>
-
-    )
-}
+    );
+};
 
 export default AppRouter;
