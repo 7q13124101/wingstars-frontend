@@ -5,7 +5,6 @@ import LoadingPage from '../pages/LoadingPage';
 import { UserProvider } from '../../context/UserContext';
 import MediaLibrary from "../pages/media-library/MediaLibrary";
 import AdminLayout from '../../layouts/AdminLayout';
-import NewsPage from '../pages/news-page/NewsPage';
 import MemberPage from '../pages/member-page/MemberPage';
 
 const LoginPage = lazy(() => import('../pages/login-page/LoginPage'));
@@ -48,7 +47,6 @@ const AppRouter: React.FC = () => {
                         <Route path="banners" element={<BannerPage />} />
                         <Route path="admins" element={<AdminPage />} />
                         <Route path="media-library" element={<MediaLibrary />} />
-                        <Route path="news" element={<NewsPage />} />
                         <Route path="members" element={<MemberPage />} />
                     </Route>
 

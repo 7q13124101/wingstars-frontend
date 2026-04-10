@@ -13,6 +13,7 @@
     "@ant-design/icons": "^6.1.1",
     "antd": "^6.3.5",
     "axios": "^1.14.0",
+    "browser-image-compression": "^2.0.2",
     "dayjs": "^1.11.20",
     "dotenv": "^17.3.1",
     "i18n": "^0.15.3",

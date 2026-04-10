@@ -25,6 +25,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
     if (path.includes('/members')) return '成員介紹';
     if (path.includes('/events')) return '活動花絮';
     if (path.includes('/admins')) return '管理員';
+    if (path.includes('/media-library')) return '媒體庫';
     return '使用者'; 
   };
 

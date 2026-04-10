@@ -137,7 +137,7 @@ export default function MediaLibraryPage() {
 
   const handleCopyLink = (url: string) => {
     navigator.clipboard.writeText(url);
-    message.success('已複製連結 (Đã copy link)!');
+    message.success('已複製連結!');
   };
 
   const handleUpload = async (options: CustomUploadOptions) => {
@@ -152,11 +152,7 @@ export default function MediaLibraryPage() {
 
       const targetModule = selectedModule === 'ALL' ? 'SYSTEM' : selectedModule;
       
-      await api.post(`/api/files/upload?module_source=${targetModule}`, formData, {
-        headers: {
-          'ngrok-skip-browser-warning': 'true'
-        }
-      });
+      await api.post(`/api/files/upload?module_source=${targetModule}`, formData);
 
       if (onSuccess) onSuccess("ok");
       
@@ -168,22 +164,22 @@ export default function MediaLibraryPage() {
     } catch (error) {
       console.error("Chi tiết lỗi Upload:", error);
       if (onError) onError(error as Error);
-      message.error('上傳失敗 (Tải lên thất bại)!');
+      message.error('上傳失敗!');
     } finally {
       setIsUploading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm("確定要刪除這個檔案嗎？(Bạn có chắc muốn xóa file này?)")) return;
+    if (!window.confirm("確定要刪除這個檔案嗎？")) return;
 
     try {
       await api.delete(`/api/files/${id}`);
-      message.success('已刪除檔案 (Đã xóa file)');
+      message.success('已刪除檔案');
       setSelectedImage(null); 
       fetchMediaList();       
     } catch {
-      message.error('刪除失敗 (Xóa thất bại)');
+      message.error('刪除失敗');
     }
   };
 
@@ -205,15 +201,15 @@ export default function MediaLibraryPage() {
             className="w-[200px] h-[44px] custom-select-rounded" 
             onChange={handleModuleChange}
             options={[
-              { value: 'ALL', label: <div className="flex items-center gap-2"><Folder size={14}/> <span>所有檔案 (Tất cả)</span></div> },
-              { value: 'CHEERLEADER_AVATAR', label: '啦啦隊頭像 (Avatar Idol)' },
-              { value: 'CHEERLEADER_AUDIO', label: '啦啦隊語音 (Audio Idol)' },
-              { value: 'CHEERLEADER_GALLERY', label: '啦啦隊相簿 (Thư viện Idol)' },
-              { value: 'BANNER_HOME', label: '首頁橫幅 (Banner Trang chủ)' },
-              { value: 'BANNER_PROMO', label: '促銷橫幅 (Banner Khuyến mãi)' },
-              { value: 'USER_AVATAR', label: '用戶頭像 (Avatar User)' },
-              { value: 'SYSTEM_ASSET', label: '系統資源 (Tài nguyên hệ thống)' },
-              { value: 'UNKNOWN', label: '未分類 (Chưa phân loại)' },
+              { value: 'ALL', label: <div className="flex items-center gap-2"><Folder size={14}/> <span>所有檔案</span></div> },
+              { value: 'CHEERLEADER_AVATAR', label: '啦啦隊頭像' },
+              { value: 'CHEERLEADER_AUDIO', label: '啦啦隊語音' },
+              { value: 'CHEERLEADER_GALLERY', label: '啦啦隊相簿' },
+              { value: 'BANNER_HOME', label: '首頁橫幅' },
+              { value: 'BANNER_PROMO', label: '促銷橫幅' },
+              { value: 'USER_AVATAR', label: '用戶頭像' },
+              { value: 'SYSTEM_ASSET', label: '系統資源' },
+              { value: 'UNKNOWN', label: '未分類' },
             ]}
           />
         </div>
@@ -231,7 +227,7 @@ export default function MediaLibraryPage() {
               className="bg-button-edit hover:!bg-wingstars-primary border-none shadow-sm h-11 rounded-xl px-5 flex items-center gap-2"
             >
               <span className="font-bold text-white">
-                {isUploading ? '上傳中...' : '上傳檔案 (Upload)'}
+                {isUploading ? '上傳中...' : '上傳檔案'}
               </span>
             </Button>
           </Upload>
@@ -241,7 +237,7 @@ export default function MediaLibraryPage() {
       <div className="bg-white rounded-[20px] shadow-sm border border-gray-50 p-6 min-h-[500px] flex flex-col relative gap-8 shrink-0 h-fit">
         {isLoading && (
           <div className="absolute inset-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center rounded-[20px]">
-            <span className="text-pink-500 font-bold animate-pulse">載入中 (Đang tải)...</span>
+            <span className="text-pink-500 font-bold animate-pulse">載入中...</span>
           </div>
         )}
 
@@ -249,14 +245,14 @@ export default function MediaLibraryPage() {
           {filteredMedia.map((media) => (
             <div key={media.id} className="group relative rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 bg-gray-50/50 flex flex-col">
               <div className="aspect-square bg-gray-100 relative overflow-hidden flex items-center justify-center">
-                <img src={media.file_url} alt={media.file_name} className="object-contain w-full h-full p-2" />
+                <img src={media.file_url} loading="lazy" alt={media.file_name} className="object-contain w-full h-full p-2" />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-3 backdrop-blur-sm">
-                  <Tooltip title="預覽 (Xem trước)">
+                  <Tooltip title="預覽">
                     <button onClick={() => setSelectedImage(media)} className="w-10 h-10 rounded-full bg-white text-gray-700 flex items-center justify-center hover:bg-pink-50 hover:text-pink-500 transition-colors">
                       <Eye size={18} />
                     </button>
                   </Tooltip>
-                  <Tooltip title="複製連結 (Copy Link)">
+                  <Tooltip title="複製連結">
                     <button onClick={() => handleCopyLink(media.file_url)} className="w-10 h-10 rounded-full bg-white text-gray-700 flex items-center justify-center hover:bg-blue-50 hover:text-blue-500 transition-colors">
                       <Copy size={18} />
                     </button>
@@ -282,7 +278,7 @@ export default function MediaLibraryPage() {
         {!isLoading && filteredMedia.length === 0 && (
           <div className="flex-1 flex flex-col items-center justify-center text-gray-400 py-10">
             <ImageIcon size={48} className="opacity-20 mb-3"/>
-            <p>找不到任何檔案 (Không tìm thấy file nào)</p>
+            <p>找不到任何檔案</p>
           </div>
         )}
 
@@ -318,21 +314,21 @@ export default function MediaLibraryPage() {
             </div>
             <div className="w-1/2 space-y-4">
               <div>
-                <p className="text-xs text-gray-400 mb-1">檔案名稱 (Tên file)</p>
+                <p className="text-xs text-gray-400 mb-1">檔案名稱</p>
                 <p className="text-sm font-bold text-gray-800 break-all">{selectedImage.file_name}</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs text-gray-400 mb-1">大小 (Dung lượng)</p>
+                  <p className="text-xs text-gray-400 mb-1">大小</p>
                   <p className="text-sm font-medium text-gray-700">{selectedImage.file_size}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400 mb-1">上傳日期 (Ngày tải)</p>
+                  <p className="text-xs text-gray-400 mb-1">上傳日期</p>
                   <p className="text-sm font-medium text-gray-700">{selectedImage.created_at}</p>
                 </div>
               </div>
               <div className="pt-2 border-t border-gray-100">
-                <p className="text-xs text-gray-400 mb-2">檔案連結 (URL)</p>
+                <p className="text-xs text-gray-400 mb-2">檔案連結</p>
                 <div className="flex gap-2">
                   <Input value={selectedImage.file_url} readOnly className="bg-gray-50 text-xs" />
                   <Button icon={<Copy size={14} />} onClick={() => handleCopyLink(selectedImage.file_url)} />
@@ -340,7 +336,7 @@ export default function MediaLibraryPage() {
               </div>
               <div className="pt-4 flex justify-end gap-3">
                 <Button danger icon={<Trash2 size={16} />} className="rounded-lg" onClick={() => handleDelete(selectedImage.id)}>
-                  刪除 (Xóa)
+                  刪除
                 </Button>
               </div>
             </div>
