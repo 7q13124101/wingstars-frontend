@@ -39,19 +39,19 @@ export default function AdminsPage() {
 
   const columns: ColumnsType<AdminRecord> = [
     { 
-      title: '管理員帳號 (Username)', 
+      title: '管理員帳號', 
       dataIndex: 'username', 
       key: 'username', 
       render: (text) => <span className="font-medium text-gray-800">{text}</span> 
     },
     { 
-      title: '電子郵件 (Email)', 
+      title: '電子郵件', 
       dataIndex: 'email', 
       key: 'email', 
       render: (text) => <span className="text-gray-500">{text}</span> 
     },
     { 
-      title: '主要角色 (Role)', 
+      title: '主要角色', 
       dataIndex: 'mainRole', 
       key: 'mainRole', 
       render: (role) => (
@@ -61,7 +61,7 @@ export default function AdminsPage() {
       ) 
     },
     { 
-      title: '其他角色 (Other Roles)', 
+      title: '其他角色', 
       dataIndex: 'otherRoles', 
       key: 'otherRoles', 
       render: (roles: string[]) => (
@@ -75,7 +75,7 @@ export default function AdminsPage() {
       )
     },
     { 
-      title: '帳號狀態 (Status)', 
+      title: '帳號狀態', 
       dataIndex: 'isLocked', 
       key: 'isLocked',
       align: 'center',
@@ -92,7 +92,7 @@ export default function AdminsPage() {
       )
     },
     {
-      title: '操作 (Actions)',
+      title: '操作',
       key: 'action',
       width: 150,
       align: 'center',
@@ -152,13 +152,13 @@ export default function AdminsPage() {
     <div className="flex flex-col h-[calc(100vh-80px)] overflow-y-auto px-4 pb-10 gap-4 custom-scrollbar">
       
       {/* Toolbar block (Search & Buttons) */}
-      <div className="flex justify-between items-center pt-6">
+      <div className="flex justify-between items-center">
         <Input 
           prefix={<Search size={18} className="text-gray-400" />}
           placeholder="搜尋管理員..." 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-[300px] py-2.5 rounded-xl border-gray-100 hover:border-pink-300 focus:border-pink-400 shadow-sm"
+          className="max-w-[400px] py-2.5 rounded-xl border-gray-100 hover:border-pink-300 focus:border-pink-400 shadow-sm"
         />
 
         <div className="flex items-center gap-3">
@@ -228,7 +228,7 @@ export default function AdminsPage() {
         >
           <Form.Item 
             name="username" 
-            label="管理員帳號 (Username)" 
+            label="管理員帳號" 
             rules={[{ required: true, message: '請輸入帳號！' }]}
           >
             <Input placeholder="輸入登入帳號..." className="rounded-lg py-2" disabled={!!editingAdmin} />
@@ -236,7 +236,7 @@ export default function AdminsPage() {
 
           <Form.Item 
             name="email" 
-            label="電子郵件 (Email)" 
+            label="電子郵件地址" 
             rules={[{ required: true, type: 'email', message: '請輸入正確的信箱格式！' }]}
           >
             <Input placeholder="example@wingstars.com.tw" className="rounded-lg py-2" />
@@ -245,7 +245,7 @@ export default function AdminsPage() {
           <div className="grid grid-cols-2 gap-4">
             <Form.Item 
               name="mainRole" 
-              label="主要角色 (Main Role)" 
+              label="主要角色" 
               rules={[{ required: true, message: '請選擇主要角色！' }]}
             >
               <Select placeholder="選擇角色" className="h-10">
@@ -255,8 +255,8 @@ export default function AdminsPage() {
               </Select>
             </Form.Item>
 
-            <Form.Item name="otherRoles" label="其他角色 (Other Roles)">
-              <Select mode="multiple" allowClear placeholder="可複選" className="w-full">
+            <Form.Item name="otherRoles" label="其他角色">
+              <Select mode="multiple" allowClear placeholder="可複選" className="w-full h-10">
                 <Select.Option value="Author">Author</Select.Option>
                 <Select.Option value="Contributor">Contributor</Select.Option>
               </Select>
