@@ -21,6 +21,7 @@ const menuItems = [
   // { path: '/marketing', label: '行銷', icon: Megaphone },
   { path: '/schedule', label: '班表', icon: CalendarDays },
   { path: '/banners', label: '輪播 Banner', icon: Images },
+  { path: '/media-library', label: '媒體庫', icon: Images },
 ];
 
 interface SidebarProps {
@@ -31,6 +32,7 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
     <aside className={`${isCollapsed ? 'w-[80px]' : 'w-[240px]'} bg-white border-r border-gray-100 flex flex-col h-screen transition-all duration-300`}>
       <div className="h-[80px] flex items-center px-6 overflow-hidden">
         <div className="flex items-center gap-2">
+          <img src="src/assets/logo/WS logo.png" alt="Logo" className='w-8 h-7'/>
           <span className={`text-xl font-bold bg-gradient-to-r from-pink-400 to-purple-500 text-transparent bg-clip-text whitespace-nowrap transition-opacity duration-300 ${isCollapsed ? 'opacity-0 hidden' : 'opacity-100'}`}>
             Wing Star TSG
           </span>
@@ -52,7 +54,7 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
                 className={({ isActive }) =>
                 `flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between px-3'} py-2.5 rounded-xl transition-colors duration-200 ${
                     isActive
-                    ? 'bg-pink-50 text-[var(--color-primary)]' 
+                    ? 'bg-pink-50 text-wingstars-primary' 
                     : 'text-gray-500 hover:bg-gray-50' 
                 }`
                 }

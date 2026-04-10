@@ -64,7 +64,7 @@ export default function UsersPage() {
           placeholder="Search here..." 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-[300px] py-2.5 rounded-xl border-gray-100 hover:border-pink-300 focus:border-pink-400"
+          className="max-w-[400px] py-2.5 rounded-xl border-gray-100 hover:border-pink-300 focus:border-pink-400"
         />
 
         <div className="flex items-center gap-3">
@@ -114,7 +114,7 @@ export default function UsersPage() {
             if (editingUser) {
               setUsersList(prev => prev.map(u => u.id === editingUser.id ? { ...u, ...formData } : u));
             } else {
-              setUsersList(prev => [{ ...formData, id: Date.now(), articles: 0, points: 0 }, ...prev]);
+              setUsersList(prev => [{ ...formData, id: Date.now(), articles: 0, points: 0 , tier: '一般會員'}, ...prev]);
             }
           }}
           initialData={editingUser} 
