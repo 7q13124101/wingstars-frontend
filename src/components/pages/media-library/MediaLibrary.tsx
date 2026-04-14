@@ -74,7 +74,7 @@ export default function MediaLibraryPage() {
         params.moduleSource = selectedModule;
       }
 
-      const res = await api.get('/api/files', { params }); 
+      const res = await api.get('/api/admin/files', { params }); 
       const result = res.data; 
 
       if (result) {
@@ -152,7 +152,7 @@ export default function MediaLibraryPage() {
 
       const targetModule = selectedModule === 'ALL' ? 'SYSTEM' : selectedModule;
       
-      await api.post(`/api/files/upload?module_source=${targetModule}`, formData);
+      await api.post(`/api/admin/files/upload?module_source=${targetModule}`, formData);
 
       if (onSuccess) onSuccess("ok");
       
@@ -174,7 +174,7 @@ export default function MediaLibraryPage() {
     if (!window.confirm("確定要刪除這個檔案嗎？")) return;
 
     try {
-      await api.delete(`/api/files/${id}`);
+      await api.delete(`/api/admin/files/${id}`);
       message.success('已刪除檔案');
       setSelectedImage(null); 
       fetchMediaList();       
@@ -193,7 +193,7 @@ export default function MediaLibraryPage() {
             placeholder="搜尋目前頁面檔案..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-[280px] py-2.5 rounded-xl border-gray-100 hover:border-pink-300 focus:border-pink-400 shadow-sm"
+            className="w-72 py-2.5 rounded-xl border-gray-100 hover:border-pink-300 focus:border-pink-400 shadow-sm"
           />
           
           <Select 
